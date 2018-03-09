@@ -319,7 +319,7 @@ enum BuiltinImplConditions<'tcx> {
 ///     all the "potential success" candidates can potentially succeed,
 ///     so they are no-ops when unioned with a definite error, and within
 ///     the categories it's easy to see that the unions are correct.
-enum EvaluationResult {
+pub enum EvaluationResult {
     /// Evaluation successful
     EvaluatedToOk,
     /// Evaluation is known to be ambiguous - it *might* hold for some
@@ -383,7 +383,7 @@ enum EvaluationResult {
 }
 
 impl EvaluationResult {
-    fn may_apply(self) -> bool {
+    pub fn may_apply(self) -> bool {
         match self {
             EvaluatedToOk |
             EvaluatedToAmbig |
@@ -405,6 +405,14 @@ impl EvaluationResult {
         }
     }
 }
+
+impl_stable_hash_for!(enum self::EvaluationResult {
+    EvaluatedToOk,
+    EvaluatedToAmbig,
+    EvaluatedToUnknown,
+    EvaluatedToRecur,
+    EvaluatedToErr
+});
 
 #[derive(Clone)]
 pub struct EvaluationCache<'tcx> {
@@ -571,6 +579,17 @@ impl<'cx, 'gcx, 'tcx> SelectionContext<'cx, 'gcx, 'tcx> {
         self.probe(|this, _| {
             this.evaluate_predicate_recursively(TraitObligationStackList::empty(), obligation)
                 == EvaluatedToOk
+        })
+    }
+
+    /// Evaluates whether the obligation `obligation` can be satisfied and returns
+    /// an `EvaluationResult`.
+    pub fn evaluate_obligation_recursively(&mut self,
+                                           obligation: &PredicateObligation<'tcx>)
+                                           -> EvaluationResult
+    {
+        self.probe(|this, _| {
+            this.evaluate_predicate_recursively(TraitObligationStackList::empty(), obligation)
         })
     }
 
