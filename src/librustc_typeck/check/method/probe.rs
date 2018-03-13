@@ -1079,9 +1079,7 @@ impl<'a, 'gcx, 'tcx> ProbeContext<'a, 'gcx, 'tcx> {
 
                 TraitCandidate(trait_ref) => {
                     let predicate = trait_ref.to_predicate();
-                    let obligation =
-                        traits::Obligation::new(cause.clone(), self.param_env, predicate);
-                    if !selcx.evaluate_obligation(&obligation) {
+                    if !self.predicate_may_hold(self.param_env, predicate) {
                         if self.probe(|_| self.select_trait_candidate(trait_ref).is_err()) {
                             // This candidate's primary obligation doesn't even
                             // select - don't bother registering anything in
@@ -1109,7 +1107,7 @@ impl<'a, 'gcx, 'tcx> ProbeContext<'a, 'gcx, 'tcx> {
             // Evaluate those obligations to see if they might possibly hold.
             for o in candidate_obligations.into_iter().chain(sub_obligations) {
                 let o = self.resolve_type_vars_if_possible(&o);
-                if !selcx.evaluate_obligation(&o) {
+                if !self.predicate_may_hold(o.param_env, o.predicate) {
                     result = ProbeResult::NoMatch;
                     if let &ty::Predicate::Trait(ref pred) = &o.predicate {
                         possibly_unsatisfied_predicates.push(pred.0.trait_ref);
