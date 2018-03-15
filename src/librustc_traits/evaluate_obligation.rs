@@ -29,6 +29,6 @@ crate fn evaluate_obligation<'tcx>(
         let mut selcx = SelectionContext::new(&infcx);
         let obligation = Obligation::new(ObligationCause::dummy(), param_env, predicate);
 
-        selcx.evaluate_obligation_recursively(&obligation)
+        selcx.evaluate_obligation(&obligation)
     })
 }

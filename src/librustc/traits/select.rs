@@ -552,42 +552,14 @@ impl<'cx, 'gcx, 'tcx> SelectionContext<'cx, 'gcx, 'tcx> {
     // The result is "true" if the obligation *may* hold and "false" if
     // we can be sure it does not.
 
-    /// Evaluates whether the obligation `obligation` can be satisfied (by any means).
-    pub fn evaluate_obligation(&mut self,
-                               obligation: &PredicateObligation<'tcx>)
-                               -> bool
-    {
-        debug!("evaluate_obligation({:?})",
-               obligation);
-
-        self.probe(|this, _| {
-            this.evaluate_predicate_recursively(TraitObligationStackList::empty(), obligation)
-                .may_apply()
-        })
-    }
-
-    /// Evaluates whether the obligation `obligation` can be satisfied,
-    /// and returns `false` if not certain. However, this is not entirely
-    /// accurate if inference variables are involved.
-    pub fn evaluate_obligation_conservatively(&mut self,
-                                              obligation: &PredicateObligation<'tcx>)
-                                              -> bool
-    {
-        debug!("evaluate_obligation_conservatively({:?})",
-               obligation);
-
-        self.probe(|this, _| {
-            this.evaluate_predicate_recursively(TraitObligationStackList::empty(), obligation)
-                == EvaluatedToOk
-        })
-    }
-
     /// Evaluates whether the obligation `obligation` can be satisfied and returns
     /// an `EvaluationResult`.
-    pub fn evaluate_obligation_recursively(&mut self,
-                                           obligation: &PredicateObligation<'tcx>)
-                                           -> EvaluationResult
+    pub fn evaluate_obligation(&mut self,
+                               obligation: &PredicateObligation<'tcx>)
+                               -> EvaluationResult
     {
+        debug!("evaluate_obligation({:?})", obligation);
+
         self.probe(|this, _| {
             this.evaluate_predicate_recursively(TraitObligationStackList::empty(), obligation)
         })
