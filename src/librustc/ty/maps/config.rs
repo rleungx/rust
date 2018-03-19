@@ -75,7 +75,7 @@ impl<'tcx> QueryDescription<'tcx> for queries::normalize_ty_after_erasing_region
 
 impl<'tcx> QueryDescription<'tcx> for queries::evaluate_obligation<'tcx> {
     fn describe(_tcx: TyCtxt, goal: CanonicalPredicateGoal<'tcx>) -> String {
-        format!("evaluating trait selection obligation `{:?}`", goal)
+        format!("evaluating trait selection obligation `{}`", goal.value.value)
     }
 }
 
