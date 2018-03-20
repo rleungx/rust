@@ -330,7 +330,8 @@ fn process_predicate<'a, 'gcx, 'tcx>(
             if data.is_global() {
                 // no type variables present, can use evaluation for better caching.
                 // FIXME: consider caching errors too.
-                if selcx.evaluate_obligation_conservatively(&obligation) {
+                if selcx.infcx().predicate_must_hold(obligation.param_env,
+                                                     obligation.predicate) {
                     debug!("selecting trait `{:?}` at depth {} evaluated to holds",
                            data, obligation.recursion_depth);
                     return Ok(Some(vec![]))

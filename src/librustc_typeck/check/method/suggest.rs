@@ -18,7 +18,6 @@ use hir::def::Def;
 use hir::def_id::{CRATE_DEF_INDEX, DefId};
 use middle::lang_items::FnOnceTraitLangItem;
 use namespace::Namespace;
-use rustc::traits::{Obligation, SelectionContext};
 use util::nodemap::FxHashSet;
 
 use syntax::ast;
@@ -58,12 +57,7 @@ impl<'a, 'gcx, 'tcx> FnCtxt<'a, 'gcx, 'tcx> {
                                                TypeVariableOrigin::MiscVariable(span))]);
                         let trait_ref = ty::TraitRef::new(fn_once, fn_once_substs);
                         let poly_trait_ref = trait_ref.to_poly_trait_ref();
-                        let obligation =
-                            Obligation::misc(span,
-                                             self.body_id,
-                                             self.param_env,
-                                             poly_trait_ref.to_predicate());
-                        SelectionContext::new(self).evaluate_obligation(&obligation)
+                        self.predicate_may_hold(self.param_env, poly_trait_ref.to_predicate())
                     })
                 })
             }

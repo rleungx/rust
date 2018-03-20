@@ -20,7 +20,6 @@ unsafe auto trait Trait {
 fn call_method<T: Trait>(x: T) {}
 
 fn main() {
-    // ICE
     call_method(());
-    //~^ ERROR
+    //~^^^^^^^^^^^^^^^^^^^^^^^ ERROR overflow evaluating the requirement
 }
