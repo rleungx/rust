@@ -566,10 +566,6 @@ fn collect_tests_from_dir(
 
             let relative_file_path = relative_dir_path.join(file_path.file_stem().unwrap());
             let build_dir = config.build_base.join(&relative_file_path);
-            // if file_path == Path::new("/Users/Ryan/Workspace/rust/src/test/ui/feature-gate-custom_attribute2.rs") {
-            //     panic!("{:?}--{:?}--{:?}--{:?}",file_path, relative_file_path,relative_dir_path,build_dir);
-            // }
-            // panic!("{:?}--{:?}--{:?}--{:?}",file_path, relative_file_path,relative_dir_path,build_dir);
             fs::create_dir_all(&build_dir).unwrap();
 
             let paths = TestPaths {
@@ -581,7 +577,6 @@ fn collect_tests_from_dir(
         } else if file_path.is_file() {
             let relative_file_path = relative_dir_path.join(file_path.file_stem().unwrap());
             let build_dir = config.build_base.join(&relative_file_path);
-            // panic!("{:?}--{:?}--{:?}--{:?}",file_path, relative_file_path,relative_dir_path,build_dir);
             fs::create_dir_all(&build_dir).unwrap();
         } else if file_path.is_dir() {
             let relative_file_path = relative_dir_path.join(file.file_name());
@@ -593,7 +588,6 @@ fn collect_tests_from_dir(
                 // sometimes.
                 let build_dir = config.build_base.join(&relative_file_path);
                 fs::create_dir_all(&build_dir).unwrap();
-                // panic!("{:?}--{:?}--{:?}--{:?}",file_path, relative_file_path,relative_dir_path,build_dir);
             } else {
                 debug!("found directory: {:?}", file_path.display());
                 collect_tests_from_dir(config, base, &file_path, &relative_file_path, tests, true)?;

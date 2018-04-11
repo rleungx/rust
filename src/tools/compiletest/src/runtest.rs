@@ -247,6 +247,7 @@ impl<'test> TestCx<'test> {
 
     fn run_cfail_test(&self) {
         let proc_res = self.compile_test();
+        println!("{:?}", proc_ress);
         self.check_if_test_should_compile(&proc_res);
         self.check_no_compiler_crash(&proc_res);
 
@@ -1276,7 +1277,11 @@ impl<'test> TestCx<'test> {
             TargetLocation::ThisFile(self.make_exe_name()),
         );
 
+        println!("{:?}", &self.testpaths.file);
+        println!("{:?}", TargetLocation);
+
         rustc.arg("-L").arg(&self.aux_output_dir_name());
+        println!("{:?}", &self.aux_output_dir_name());
 
         match self.config.mode {
             CompileFail | Ui => {
@@ -1849,7 +1854,7 @@ impl<'test> TestCx<'test> {
         if let Some(r) = self.revision {
             dir = dir.join(r);
         }
-        dir = dir.join(&self.config.stage_id);
+        dir = dir.with_extension(&self.config.stage_id);
 
         dir
     }
